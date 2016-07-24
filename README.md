@@ -1,13 +1,22 @@
-# Markov_Rap_Generator
-Ted Xiao, 2015
+Overview
+============
+A project that trains a Hidden Markov Model over a dataset of rap song lyrics. You can generate a rap using a single word as the starting point. This the code for 'Generating Rap Lyrics' on [Youtube](https://youtu.be/S_f2qV2_U00)
 
+Dependencies
+============
+* Python 2.7+ (https://www.python.org/download/releases/2.7/)
 
-##What is it?
-Markov_Rap_Generator generates, well, rap songs. It uses a Markov Chain that you can extend by adding lyrics. A sample seeded Markov Chain has been included.
+Use [pip](https://pypi.python.org/pypi/pip) to install any missing dependencies
 
-##How do I generate a rap?
-Simply run MarkovRap.py and follow the command line prompts. If you want to add more lyrics of your own, simply add them to the bottom of allLyrics.txt
+Basic Usage
+===========
 
-##This is useless. Why did you make this?
-I was bored. 
+Once you've downloaded the repository simply type the following into terminal
 
+`MarkovRap.py some_word_goes_here`
+
+Replace 'some_word_goes_here' with a word of your choosing. The rap will be generated from your word.
+
+Credits
+===========
+Credit for the vast majority of code here goes to [Ted Xiao](https://github.com/txizzle/Markov_Rap_Generator). I've merely created a wrapper around all of the important functions to get people started.
