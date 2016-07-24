@@ -1,6 +1,6 @@
 Overview
 ============
-A project that trains a Hidden Markov Model over a dataset of rap song lyrics. You can generate a rap using a single word as the starting point. This the code for 'Generating Rap Lyrics' on [Youtube](https://youtu.be/S_f2qV2_U00)
+A project that trains a Hidden Markov Model over a dataset of rap song lyrics. You can generate a rap using a single word as the starting point. This the code for 'Generating Rap Lyrics' on [Youtube](https://youtu.be/yE0dcDNRZjw)
 
 Dependencies
 ============
