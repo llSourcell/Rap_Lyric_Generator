@@ -1,63 +1,55 @@
 import random, re
 
-def addToLib(fileName, currLib):
+# freqDict is a dict of dict containing frequencies
+def addToDict(fileName, freqDict):
 	f = open(fileName, 'r')
-	words = re.sub("\n", " \n ", f.read()).split(' ')
-	curr = 0
+	words = re.sub("\n", " \n", f.read()).lower().split(' ')
 
-	while curr < len(words) - 1:
-	#looping through all words including \n in this song
-		currWord = words[curr].lower()
-		nextWord = words[curr + 1].lower()
-		if currWord in currLib.keys():
-			#if we've seen this word anytime before
-			if nextWord in currLib[currWord].keys():
-				#if we've seen the sequence currWord -> nextWord before
-				currLib[currWord][nextWord] += 1
-			else:
-				#haven't seen sequence currWord -> nextWord before
-				currLib[currWord][nextWord] = 1
+	# count frequencies curr -> succ
+	for curr, succ in zip(words[1:], words[:-1]):
+		# check if curr is already in the dict of dicts
+		if curr not in freqDict:
+			freqDict[curr] = {succ: 1}
 		else:
-			#haven't seen this word before
-			currLib[currWord] = {nextWord: 1}
-		curr += 1
+			# check if the dict associated with curr already has succ
+			if succ not in freqDict[curr]:
+				freqDict[curr][succ] = 1;
+			else:
+				freqDict[curr][succ] += 1;
 
-	#change counts to percentages
-	for key in currLib.keys():
-		#for each word
-		keyTotal = 0
-		for probKey in currLib[key].keys():
-			keyTotal += currLib[key][probKey]
-		for probKey in currLib[key].keys():
-			currLib[key][probKey] = currLib[key][probKey]/keyTotal
-	return currLib
+	# compute percentages
+	probDict = {}
+	for curr, currDict in freqDict.items():
+		probDict[curr] = {}
+		currTotal = sum(currDict.values())
+		for succ in currDict:
+			probDict[curr][succ] = currDict[succ] / currTotal
+	return probDict
 
-def markov_next(currword, probDict):
-	if currword not in probDict.keys():
-		return random.choice(probDict.keys())
-	else: 
-		wordprobs = probDict[currword]
-		randProb = random.uniform(0.0, 1.0)
+def markov_next(curr, probDict):
+	if curr not in probDict:
+		return random.choice(list(probDict.keys()))
+	else:
+		succProbs = probDict[curr]
+		randProb = random.random()
 		currProb = 0.0
-		for key in wordprobs:
-			currProb += wordprobs[key]
+		for succ in succProbs:
+			currProb += succProbs[succ]
 			if randProb <= currProb:
-				return key
-		return random.choice(probDict.keys())
+				return succ
+		return random.choice(list(probDict.keys()))
 
-def makeRap(startword, probDict):
-	rap, curr, wc = '', startword, 0
-	while wc < 50:
-		rap += curr + ' '
-		curr = markov_next(curr, probDict)
-		wc += 1
-	return rap
+def makeRap(curr, probDict, T = 50):
+	rap = [curr]
+	for t in range(T):
+		rap.append(markov_next(rap[-1], probDict))
+	return " ".join(rap)
 
-def testMarkov(startword):
-	rapLib = {}
-	addToLib('allLyrics.txt', rapLib)
-	return makeRap(startword, rapLib)
+if __name__ == '__main__':
+	rapFreqDict = {}
+	rapProbDict = addToDict('lyrics1.txt', rapFreqDict)
+	rapProbDict = addToDict('lyrics2.txt', rapFreqDict)
 
-startWord = raw_input("What do you want to start your rap with?\n")
-
-print testMarkov('\nAlright, here\'s your rap: \n' + testMarkov(startWord))
+	startWord = input("What do you want to start your rap with?\n > ")
+	print("Alright, here's your rap:")
+	print(makeRap(startWord, rapProbDict))
